@@ -1,109 +1,44 @@
-let accueil = document.querySelector("#accueil")
-let activites = document.querySelector("#activites")
-let inscription = document.querySelector("#inscription")
-let partenaires = document.querySelector("#partenaires")
+// --- Navigation : effet de survol des liens ---
+["accueil", "activites", "inscription", "partenaires"].forEach(function (id) {
+  let lien = document.querySelector("#" + id);
+  lien.addEventListener("mouseenter", function () {
+    lien.style.color = "red";
+  });
+  lien.addEventListener("mouseleave", function () {
+    lien.style.color = "black";
+  });
+});
 
+// --- Validation du formulaire d'inscription ---
+// Correction : chaque champ est désormais validé individuellement
+// (auparavant, toutes les validations vérifiaient le champ "nom",
+// bug détecté grâce à la suite de tests Cypress).
+let tableau = document.getElementById("tableau");
 
-accueil.addEventListener("mouseenter",function(){   
-    accueil.style.color = "red"
-})
+let champs = [
+  { input: "prenom", erreur: "erreurPrenom", message: "veuillez entrer votre prénom" },
+  { input: "nom", erreur: "erreurNom", message: "veuillez entrer votre nom" },
+  { input: "email", erreur: "erreurEmail", message: "veuillez entrer votre Email" },
+  { input: "telephone", erreur: "erreurTelephone", message: "veuillez entrer votre Telephone" },
+  { input: "naissance", erreur: "erreurNaissance", message: "veuillez entrer votre date de naissance" },
+];
 
-accueil.addEventListener("mouseleave",function(){   
-    accueil.style.color = "black"
-})
+tableau.addEventListener("submit", function (e) {
+  let nbErreurs = 0;
 
-activites.addEventListener("mouseenter",function(){   
-    activites.style.color = "red"
-})
-activites.addEventListener("mouseleave",function(){   
-    activites.style.color = "black"
-})
+  champs.forEach(function (champ) {
+    let input = document.getElementById(champ.input);
+    let zoneErreur = document.getElementById(champ.erreur);
 
-inscription.addEventListener("mouseenter",function(){   
-    inscription.style.color = "red"
-})
-inscription.addEventListener("mouseleave",function(){   
-    inscription.style.color = "black"
-})
-
-partenaires.addEventListener("mouseenter", function(){   
-    partenaires.style.color = "red"
-})
-
-partenaires.addEventListener("mouseleave",function(){   
-    partenaires.style.color = "black"
-})
-
-
-
-
-
-let nom = document.querySelector("#nom")
-let erreurNom = document.getElementById("erreurNom")
-let tableau = document.getElementById("tableau")
-
-tableau.addEventListener("submit", function(e){
-   let nomMessage = []
-    if (nom.value.trim() === "")  {
-        nomMessage = "veuillez entrer votre nom"
+    if (input.value.trim() === "") {
+      zoneErreur.innerText = champ.message;
+      nbErreurs++;
+    } else {
+      zoneErreur.innerText = "";
     }
-   if (nomMessage.length >0 ){
-    e.preventDefault()
-       erreurNom.innerText = nomMessage
-    }
-    
+  });
 
-}) 
-
-tableau.addEventListener("submit", function(e){
-    let nomMessage = []
-     if (nom.value.trim() === "")  {
-         nomMessage = "veuillez entrer votre prénom"
-     }
-    if (nomMessage.length >0 ){
-     e.preventDefault()
-        erreurPrenom.innerText = nomMessage
-     }
-
- 
- }) 
-
- tableau.addEventListener("submit", function(e){
-    let nomMessage = []
-     if (nom.value.trim() === "")  {
-         nomMessage = "veuillez entrer votre Email"
-     }
-    if (nomMessage.length >0 ){
-     e.preventDefault()
-        erreurEmail.innerText = nomMessage
-     }
- 
- }) 
-
- tableau.addEventListener("submit", function(e){
-    let nomMessage = []
-     if (nom.value.trim() === "")  {
-         nomMessage = "veuillez entrer votre Telephone"
-     }
-    if (nomMessage.length >0 ){
-     e.preventDefault()
-        erreurTelephone.innerText = nomMessage
-     }
- 
- }) 
-
- tableau.addEventListener("submit", function(e){
-    let nomMessage = []
-     if (nom.value.trim() === "")  {
-         nomMessage = "veuillez entrer votre date de naissance"
-     }
-    if (nomMessage.length >0 ){
-     e.preventDefault()
-        erreurNaissance.innerText = nomMessage
-     }
- 
- }) 
-
-
-
-
+  if (nbErreurs > 0) {
+    e.preventDefault();
+  }
+});
